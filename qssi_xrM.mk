@@ -11,6 +11,8 @@ PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
 #Flag to Enable 64 bit only configuration
 TARGET_SUPPORTS_64_BIT_ONLY := true
 
+TARGET_DEFINES_XR_CONFIGURATION := true
+
 # Skip VINTF checks for kernel configs since we do not have kernel source
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 
