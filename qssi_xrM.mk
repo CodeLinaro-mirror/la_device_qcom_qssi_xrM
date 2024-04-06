@@ -2,7 +2,7 @@
 #we build so there is no confusion.
 
 TARGET_BOARD_PLATFORM := qssi
-TARGET_BOARD_SUFFIX := _64
+TARGET_BOARD_SUFFIX := _xrM
 TARGET_BOOTLOADER_BOARD_NAME := qssi_xrM
 
 # Opt out of 16K alignment changes
