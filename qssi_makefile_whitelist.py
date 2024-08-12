@@ -126,6 +126,7 @@ KERNEL_OBJ_WHITELIST = {
     "vendor/qcom/proprietary/commonsys/fastmmi/module/sensor/Android.mk",
     "vendor/qcom/proprietary/commonsys/fastmmi/module/sim/Android.mk",
     "vendor/qcom/proprietary/commonsys/fastmmi/module/storage/Android.mk",
+    "vendor/qcom/proprietary/commonsys/ims-ship/vtext/Android.mk",
 }
 
 DATETIME_WHITELIST = {}
