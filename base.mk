@@ -111,7 +111,7 @@ TINY_ALSA_TEST_APPS := tinyplay
 TINY_ALSA_TEST_APPS += tinycap
 TINY_ALSA_TEST_APPS += tinymix
 TINY_ALSA_TEST_APPS += tinypcminfo
-TINY_ALSA_TEST_APPS += cplay
+#TINY_ALSA_TEST_APPS += cplay
 
 #AMPLOADER
 AMPLOADER := amploader
@@ -632,7 +632,6 @@ WPA += hs20-osu-client
 #ZLIB
 ZLIB := gzip
 ZLIB += libunz
-ZLIB_HOST := minigzip
 
 #Charger
 CHARGER := charger
@@ -669,6 +668,7 @@ FD_LEAK := libc_leak_detector
 
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
+    Bluetooth \
     DeskClock \
     AlarmProvider \
     Calculator \
@@ -695,8 +695,11 @@ PRODUCT_PACKAGES := \
     SnapdragonGallery \
     VideoEditor \
     SnapdragonLauncher \
-    QesdkSysService \
+    FrameworksUtilsSysService \
     libqesdk_ndk_platform.qti
+
+PRODUCT_PACKAGES += \
+    libsnapdragon_services_adk.qti \
 
 ifeq ($(TARGET_HAS_LOW_RAM),true)
     DELAUN := Launcher3Go
@@ -780,14 +783,12 @@ PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
-PRODUCT_HOST_PACKAGES += $(ZLIB_HOST)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
 PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(FD_LEAK)
 
-PRODUCT_PACKAGES += move_wifi_data.sh
 PRODUCT_PACKAGES += librs_jni
 PRODUCT_PACKAGES += libion
 
@@ -805,6 +806,9 @@ PRODUCT_PACKAGES += vcard
 
 # tcmiface for tcm support
 PRODUCT_PACKAGES += tcmiface
+
+#usbudev service for usb ip assigment
+PRODUCT_PACKAGES += usbudev
 
 # healthd libaray expanded for mode charger
 PRODUCT_PACKAGES += libhealthd.msm
@@ -853,11 +857,6 @@ endif
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.oem_unlock_supported=1
-
-
-# VNDK-SP:
-PRODUCT_PACKAGES += \
-    vndk-sp \
 
 TARGET_FS_CONFIG_GEN := device/qcom/qssi_xrM/config.fs
 
@@ -921,8 +920,10 @@ SOONG_CONFIG_bredr_vs_btadva += bredr_or_btadva
 
 ifneq "$(wildcard vendor/qcom/proprietary/commonsys/bt/bt_adv_audio)" ""
     $(warning bt_adv_audio dir is present)
-    SOONG_CONFIG_bredr_vs_btadva_bredr_or_btadva := btadva
+    SOONG_CONFIG_bredr_vs_btadva_bredr_or_btadva := bredr
 else
     $(warning bt_adv_audio dir is not present)
     SOONG_CONFIG_bredr_vs_btadva_bredr_or_btadva := bredr
 endif #ifneq "$(wildcard vendor/qcom/proprietary/commonsys/bt/bt_adv_audio)" ""
+
+PRODUCT_PACKAGES_DEBUG += MicrodroidDemoApp

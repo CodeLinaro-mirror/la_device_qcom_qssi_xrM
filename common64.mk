@@ -24,7 +24,8 @@ endif
 # whitelisted app
 PRODUCT_COPY_FILES += \
     device/qcom/qssi_xrM/qti_whitelist.xml:system/etc/sysconfig/qti_whitelist.xml \
-    device/qcom/qssi_xrM/qti_whitelist_system_ext.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/sysconfig/qti_whitelist_system_ext.xml
+    device/qcom/qssi_xrM/qti_whitelist_system_ext.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/sysconfig/qti_whitelist_system_ext.xml \
+    device/qcom/qssi_xrM/qti_broadcast_whitelist.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/sysconfig/qti_broadcast_whitelist.xml
 
 PRODUCT_COPY_FILES += \
     device/qcom/qssi_xrM/privapp-permissions-qti.xml:system/etc/permissions/privapp-permissions-qti.xml \

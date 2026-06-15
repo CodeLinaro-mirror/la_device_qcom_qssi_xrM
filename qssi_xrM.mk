@@ -1,12 +1,15 @@
-#For QSSI_64, we build only the system image. Here we explicitly set the images
+#For QSSI_xrM, we build only the system image. Here we explicitly set the images
 #we build so there is no confusion.
 
 TARGET_BOARD_PLATFORM := qssi
 TARGET_BOARD_SUFFIX := _xrM
 TARGET_BOOTLOADER_BOARD_NAME := qssi_xrM
 
-# Opt out of 16K alignment changes
-PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 4096
+#Align all 64-bit userspace ELF binaries to 16 KB
+PRODUCT_MAX_PAGE_SIZE_SUPPORTED := 16384
+
+#Enable AOSP to be page size agnostic
+PRODUCT_NO_BIONIC_PAGE_SIZE_MACRO := true
 
 #Flag to Enable 64 bit only configuration
 TARGET_SUPPORTS_64_BIT_ONLY := true
@@ -16,12 +19,7 @@ TARGET_DEFINES_XR_CONFIGURATION := true
 # Skip VINTF checks for kernel configs since we do not have kernel source
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 
-#Enable product partition Native I/F. It is automatically set to current if
-#the shipping API level for the target is greater than 29
-PRODUCT_PRODUCT_VNDK_VERSION := current
-
 RELAX_USES_LIBRARY_CHECK := true
-NEED_AIDL_NDK_PLATFORM_BACKEND := true
 
 #Enable product partition Java I/F. It is automatically set to true if
 #the shipping API level for the target is greater than 29
@@ -54,7 +52,7 @@ BOARD_AVB_ENABLE := true
 
 # Retain the earlier default behavior i.e. ota config (dynamic partition was disabled if not set explicitly), so set
 # SHIPPING_API_LEVEL to 28 if it was not set earlier (this is generally set earlier via build.sh per-target)
-SHIPPING_API_LEVEL := 34
+SHIPPING_API_LEVEL := 36
 
 $(call inherit-product-if-exists, vendor/qcom/defs/product-defs/system/cne_url*.mk)
 
@@ -79,7 +77,7 @@ PRODUCT_BUILD_PRODUCT_IMAGE := false
 else
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 # Disable building the SUPER partition in this build. SUPER should be built
-# after qssi_xrM has been merged with the SoC build.
+# after QSSI_xrM has been merged with the SoC build.
 PRODUCT_BUILD_SYSTEM_EXT_IMAGE := true
 PRODUCT_BUILD_PRODUCT_IMAGE := true
 PRODUCT_BUILD_SUPER_PARTITION := false
@@ -129,7 +127,7 @@ PRODUCT_DEVICE := $(VENDOR_QTI_DEVICE)
 PRODUCT_BRAND := qti
 PRODUCT_MODEL := qssi system image for arm64
 
-PRODUCT_EXTRA_VNDK_VERSIONS := 30 31 32 33
+PRODUCT_EXTRA_VNDK_VERSIONS := 31 32 33 34
 
 #Initial bringup flags
 TARGET_USES_AOSP := false
@@ -145,6 +143,14 @@ TARGET_USES_NQ_NFC := true
 # default is nosdcard, S/W button enabled in resource
 PRODUCT_CHARACTERISTICS := nosdcard
 BOARD_FRP_PARTITION_NAME := frp
+
+PRODUCT_PACKAGES += qspa_system.rc qspa_default.rc
+
+# TODO(b/330696629) remove this once device can drop HIDL.
+# This adds hwservicemanager and the allocator service to the device.
+PRODUCT_PACKAGES += \
+    hwservicemanager \
+    android.hidl.allocator@1.0-service
 
 #Android EGL implementation
 PRODUCT_PACKAGES += libGLES_android
@@ -270,10 +276,6 @@ ifneq ($(strip $(TARGET_USES_RRO)),true)
 DEVICE_PACKAGE_OVERLAYS += device/qcom/qssi_xrM/overlay
 endif
 
-
-#Enable vndk-sp Libraries
-PRODUCT_PACKAGES += vndk_package
-
 PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE:=true
 
 
@@ -304,12 +306,16 @@ ifeq (true,$(call math_gt_or_eq,$(SHIPPING_API_LEVEL),29))
   PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := true
 endif
 
+# Enable allowlist for several aosp packages that should not be scanned in a "stopped" state
+# Some CTS test case failed after enabling feature config_stopSystemPackagesByDefault
+PRODUCT_PACKAGES += initial-package-stopped-states-aosp.xml
+
 # Enable support for APEX updates
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
 #enable virtualization service, please verify if virtualization needs to be updated
 #for low ram targets
-$(call inherit-product, packages/modules/Virtualization/apex/product_packages.mk)
+$(call inherit-product, packages/modules/Virtualization/build/apex/product_packages.mk)
 
 ###################################################################################
 # This is the End of target.mk file.

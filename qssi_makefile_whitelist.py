@@ -36,17 +36,17 @@ SHELL_WHITELIST = {
     "vendor/qcom/proprietary/commonsys/openclwrapper/Android.mk",
 }
 
-TARGET_OUT_HEADERS_WHITELIST = {
-}
+TARGET_OUT_HEADERS_WHITELIST = {}
+
 
 RM_WHITELIST = {
     "vendor/qcom/proprietary/common/scripts/Android.mk",
 }
 
+KERNEL_OBJ_WHITELIST = {}
+
 LOCAL_COPY_HEADERS_WHITELIST = {}
 
-KERNEL_OBJ_WHITELIST = {
-}
 
 DATETIME_WHITELIST = {}
 
