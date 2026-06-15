@@ -14,14 +14,14 @@ TARGET_HW_DISK_ENCRYPTION_PERF := true
 
 BOARD_SECCOMP_POLICY := device/qcom/$(TARGET_BOARD_PLATFORM)/seccomp
 
-BOARD_SYSTEMSDK_VERSIONS:= $(SHIPPING_API_LEVEL)
-
 TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true
 TARGET_NO_KERNEL := true
 
 # Disable DLKMs compilation for lunch qssi builds.
 TARGET_KERNEL_DLKM_DISABLE := true
+# create symlink system/lib/modules -> system_dlkm/lib/modules
+CREATE_SYSTEM_DLKM_SYMLINK := true
 
 -include $(QCPATH)/common/msmnile/BoardConfigVendor.mk
 
@@ -120,8 +120,6 @@ BUILD_BROKEN_USES_BUILD_HOST_SHARED_LIBRARY := true
 BUILD_BROKEN_USES_BUILD_HOST_EXECUTABLE := true
 BUILD_BROKEN_USES_BUILD_HOST_STATIC_LIBRARY := true
 
-#Enable VNDK Compliance
-BOARD_VNDK_VERSION:=current
 RECOVERY_SNAPSHOT_VERSION := current
 RAMDISK_SNAPSHOT_VERSION := current
 Q_BU_DISABLE_MODULE := true
